@@ -5,7 +5,7 @@
 #Source: http://flask.pocoo.org/docs/0.10/tutorial/setup/#tutorial-setup
 
 import sqlite3
-from mvp_db import qry_drop_basic, qry_create_basic, qry_insert_basic
+from mvp_db import conn, curs, qry_commit, qry_drop_basic, qry_drop_corrupt, qry_create_basic, qry_create_corrupt
 from flask import Flask, request, session, g, redirect, url_for, \
      abort, render_template, flash
 
@@ -23,14 +23,18 @@ app.config.from_object(__name__)
 
 app.config.from_envvar('MVP_SETTINGS', silent=True)
 
+def init_db():
+        qry_commit(qry_drop_basic)
+        qry_commit(qry_drop_corrupt)
+        qry_commit(qry_create_basic)
+        qry_commit(qry_create_corrupt)
+        conn.commit()
+        conn.close()
+
+init_db()
+
 def connect_db():
     return sqlite3.connect(app.config['DATABASE'])
-
-def init_db():
-    with closing(connect_db()) as db:
-        db.cursor().executescript(qry_drop_basic)
-        db.cursor().executescript(qry_create_basic)
-        db.commit()
 
 @app.before_request
 def before_request():
