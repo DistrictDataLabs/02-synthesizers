@@ -10,7 +10,7 @@
 
 #This is better executed as a reverse spell check\
 
-from random import randint
+from random import randint, gauss, choice, betavariate
 
 '''
 1)      Missing Value corrupter
@@ -76,18 +76,19 @@ class StrCorrupt(str):
         liststr.remove(liststr[randindx])
         liststr = "".join(liststr)
         return liststr
-
+    
     def pick_position(self):
         "the position is more likely to be in the middle or at the end"    
         "pick the position based on probabilitic model"
         "use the combination of two normal distribution"
         
-        # uncomment below line if needed    
+        #import functions at top of module and import only functions used
+        #uncomment below line if needed    
         #from random import *
         
         # parameters        
         p = 0.5     # probability of varation happens in the middle or at the end
-        l = len(sela)   
+        l = len(self)   
         flag = random()
         
         # gauss() will generate a random number from normal distribution    
@@ -106,3 +107,9 @@ class StrCorrupt(str):
         
         # return the varation position
         return int(round(position))
+
+    def pick_beta(self):
+        "use a beta distribution to pick positions"
+        l = len(self)
+        position = betavariate(5,1)*l/2 + l/2
+        return round(position)
