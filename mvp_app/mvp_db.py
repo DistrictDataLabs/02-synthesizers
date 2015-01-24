@@ -11,7 +11,7 @@ def qry_commit(qry_string):
     curs.execute(qry_string)
     conn.commit()
 
-qry_drop_table = 'DROP TABLE if exists basic;'
+qry_drop_basic = 'DROP TABLE if exists basic;'
 
 qry_create_basic = ''' CREATE TABLE IF NOT EXISTS basic (
 id integer primary key autoincrement,
@@ -45,5 +45,5 @@ gender) VALUES (?,?,?,?,?,?,?,?,?,?,?,?);'''
 #conn.commit()
 
 if __name__ == '__main__':
-	qry_commit(qry_drop_table)
+    qry_commit(qry_drop_basic)
     qry_commit(qry_create_basic)

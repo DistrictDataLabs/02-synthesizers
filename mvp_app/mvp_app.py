@@ -5,7 +5,7 @@
 #Source: http://flask.pocoo.org/docs/0.10/tutorial/setup/#tutorial-setup
 
 import sqlite3
-from mvp_db import qry_drop_table, qry_create_table, qry_insert_basic
+from mvp_db import qry_drop_basic, qry_create_basic, qry_insert_basic
 from flask import Flask, request, session, g, redirect, url_for, \
      abort, render_template, flash
 
@@ -28,8 +28,8 @@ def connect_db():
 
 def init_db():
     with closing(connect_db()) as db:
-            db.cursor().executescript(qry_drop_table)
-            db.cursor().executescript(qry_create_table)
+        db.cursor().executescript(qry_drop_basic)
+        db.cursor().executescript(qry_create_basic)
         db.commit()
 
 @app.before_request
@@ -55,10 +55,21 @@ def show_entries():
 def add_entry():
     if not session.get('logged_in'):
         abort(401)
-    g.db.execute('insert into basic (name_last, name_first, gender) values (?, ?, ?)',
-                 [request.form['title'], request.form['text']])
+
+        
+    g.db.execute('''insert into basic (name_first, name_last, gender) 
+        values (?, ?, ?)''',
+                 [request.form['name_first'], request.form['name_last'], request.form['gender']])
     g.db.commit()
-    flash('entry posted')
+    # name_middle, address_1, address_2, city, state, zip, phone, email,
+    #, ?, ?, ?, ?, ?, ?, ?, ?
+    #\
+    #             request.form['name_middle'], 
+    #             request.form['address_1'], request.form['address_2'],\
+    #             request.form['city'], request.form['state'],
+    #             request.form['zip'], request.form['phone'],
+    #             request.form['email'],
+    flash('data entered')
     return redirect(url_for('show_entries'))
 
 #log in log out
