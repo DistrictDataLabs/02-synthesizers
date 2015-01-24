@@ -72,7 +72,7 @@ class StrCorrupt(str):
     def drop_char(self):
 	"use pick_position function to choose varation posiiton"
         liststr = [x for x in self]
-        randindx = pick_position(self)
+        randindx = pick_position(self) - 1  # index = position - 1
         liststr.remove(liststr[randindx])
         liststr = "".join(liststr)
         return liststr
