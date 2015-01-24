@@ -76,3 +76,33 @@ class StrCorrupt(str):
         liststr.remove(liststr[randindx])
         liststr = "".join(liststr)
         return liststr
+
+    def pick_position(self):
+        "the position is more likely to be in the middle or at the end"    
+        "pick the position based on probabilitic model"
+        "use the combination of two normal distribution"
+        
+        # uncomment below line if needed    
+        #from random import *
+        
+        # parameters        
+        p = 0.5     # probability of varation happens in the middle or at the end
+        l = len(sela)   
+        flag = random()
+        
+        # gauss() will generate a random number from normal distribution    
+        # variation is most likely happens in the middle or at the end  
+        
+        if flag > p: 
+            # generate a varation position near the end of the string         
+            position = gauss(l,l/15)
+            # varation should happen within the string
+            if position > l:
+                position = 2 * l - position
+        
+        else:
+            # generate a varation position near the middle of the string        
+            position = gauss(l/2, l/15)
+        
+        # return the varation position
+        return int(round(position))
