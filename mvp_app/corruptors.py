@@ -70,9 +70,9 @@ class StrCorrupt(str):
         return self[:-1]
 
     def drop_char(self):
-        "uniform distribution single character corrupter"
+	"use pick_position function to choose varation posiiton"
         liststr = [x for x in self]
-        randindx = randint(0, len(liststr)-1)
+        randindx = pick_position(self)
         liststr.remove(liststr[randindx])
         liststr = "".join(liststr)
         return liststr
