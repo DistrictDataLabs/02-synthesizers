@@ -47,8 +47,8 @@ def teardown_request(exception):
 #seperate view from routes for later versions
 @app.route('/')
 def show_entries():
-    cur = g.db.execute('select name_last, name_first, gender from basic order by name_last desc')
-    entries = [dict(name_last=row[0], name_first=row[1], gender=row[2]) for row in cur.fetchall()]
+    cur = g.db.execute('select id, name_last, name_first, gender from basic order by name_last desc')
+    entries = [dict(id=row[0], name_last=row[1], name_first=row[2], gender=row[3]) for row in cur.fetchall()]
     return render_template('show_entries.html', entries=entries)
 
 @app.route('/add', methods=['POST'])
@@ -71,6 +71,35 @@ def add_entry():
     #             request.form['email'],
     flash('data entered')
     return redirect(url_for('show_entries'))
+
+@app.route('/<int:entry_id>', methods=['GET'])
+def show_record(entry_id):
+    cur = g.db.execute("SELECT id, name_last, name_first, gender FROM basic WHERE id = ?", [entry_id])
+    entries = [dict(id=row[0], name_last=row[1], name_first=row[2], gender=row[3]) for row in cur.fetchall()]
+    return render_template('single_entry.html', entries=entries, entry_id=entry_id)
+    
+@app.route('/corrupt/add', methods=['POST'])
+def corrupt_add():
+    cur = g.db.execute("SELECT id, name_last, name_first, gender FROM basic WHERE id = ?", [request.form['entry_id']])
+    #Add corrupting here
+    entries = [dict(id=row[0], name_last=row[1], name_first=row[2], gender=row[3]) for row in cur.fetchall()]
+
+    g.db.execute('''insert into corrupt (basic_id, name_first, name_last, gender) 
+        values (?, ?, ?, ?)''', [request.form['entry_id'], "b", "c", "d"])
+    g.db.commit()
+    entry_id = float(request.form['entry_id'])
+    flash('data corrupted')
+    return redirect(url_for('show_corrupt', entry_id=entry_id))
+
+@app.route('/<int:entry_id>/corrupt', methods=['GET'])
+def show_corrupt(entry_id):
+    #original entr
+    cur = g.db.execute("SELECT id, name_last, name_first, gender FROM basic WHERE id = ?", [entry_id])
+    entries = [dict(id=row[0], name_last=row[1], name_first=row[2], gender=row[3]) for row in cur.fetchall()]
+    #corrupt counterpart
+    cur = g.db.execute("SELECT id, name_last, name_first, gender FROM corrupt WHERE id = ?", [entry_id])
+    corrupt = [dict(id=row[0], name_last=row[1], name_first=row[2], gender=row[3]) for row in cur.fetchall()]
+    return render_template('single_entry.html', entries=entries, corrupt=corrupt, entry_id=entry_id)
 
 #log in log out
 @app.route('/login', methods=['GET', 'POST'])
