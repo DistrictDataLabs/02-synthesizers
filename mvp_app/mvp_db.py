@@ -27,6 +27,20 @@ phone text,
 email text,
 gender text);'''
 
+qry_create_corrupt = ''' CREATE TABLE IF NOT EXISTS corrupt (
+id integer primary key autoincrement,
+name_first text, 
+name_last text,
+name_middle text, 
+address_1 text,
+address_2 text, 
+city text,
+state text, 
+zip text,
+phone text, 
+email text,
+gender text);'''
+
 qry_insert_basic = ''' INSERT INTO basic (
 id,
 name_first, 
