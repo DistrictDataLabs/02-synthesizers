@@ -15,7 +15,7 @@
   {% endif %}
   <ul class="entries">
   {% for entry in entries %}
-    <li><p>{{ entry.name_last }}, {{ entry.name_first }}, {{ entry.gender }}</p>
+    <li><a href="/{{entry.id}}">{{ entry.id }}</a>{{ entry.name_last }}, {{ entry.name_first }}, {{ entry.gender }}</p>
   {% else %}
     <li><em>Add data</em>
   {% endfor %}

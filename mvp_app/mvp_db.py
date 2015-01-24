@@ -12,6 +12,7 @@ def qry_commit(qry_string):
     conn.commit()
 
 qry_drop_basic = 'DROP TABLE if exists basic;'
+qry_drop_corrupt = 'DROP TABLE if exists corrupt;'
 
 qry_create_basic = ''' CREATE TABLE IF NOT EXISTS basic (
 id integer primary key autoincrement,
@@ -29,6 +30,7 @@ gender text);'''
 
 qry_create_corrupt = ''' CREATE TABLE IF NOT EXISTS corrupt (
 id integer primary key autoincrement,
+basic_id integer,
 name_first text, 
 name_last text,
 name_middle text, 
@@ -60,4 +62,6 @@ gender) VALUES (?,?,?,?,?,?,?,?,?,?,?,?);'''
 
 if __name__ == '__main__':
     qry_commit(qry_drop_basic)
+    qry_commit(qry_drop_corrupt)
     qry_commit(qry_create_basic)
+    qry_commit(qry_create_corrupt)
